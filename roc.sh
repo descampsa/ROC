@@ -26,6 +26,7 @@ set -e
 tmp_dir=$(mktemp -d)
 
 roc_plot=""
+pr_plot=""
 for input_file in "$@"
 do
 	tmp_file="$tmp_dir/$(basename $input_file)"
@@ -53,6 +54,7 @@ do
 	title=$(basename  $input_file)
 	title="${title%.*}"
 	roc_plot="$roc_plot '"$tmp_file"' using (($N-\$2)/$N):(($P-\$3)/$P) title \"$title\" with lines,"
+	pr_plot="$pr_plot '"$tmp_file"' using (($P-\$3)/$P):(($P-\$3)/($P-\$3+$N-\$2)) title \"$title\" with lines,"
 done
 
 
@@ -66,6 +68,18 @@ gnuplot <<-EOF
 	set yrange [0:1]
 	set output 'roc.svg'
 	plot $roc_plot
+EOF
+
+gnuplot <<-EOF
+	set terminal svg enhanced background rgb 'white' size 1000 1000 fsize 20
+	set title "Precision-Recall curve"
+	set key right bottom box
+	set xlabel("Recall")
+	set ylabel("Precision")
+	set xrange [0:1]
+	set yrange [0:1]
+	set output 'pr.svg'
+	plot $pr_plot
 EOF
 
 rm -r $tmp_dir
