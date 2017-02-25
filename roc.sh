@@ -16,7 +16,7 @@
 # 0 0.6
 # 1 0.7
 #
-# Output curves will be generate in roc.png and pr.png
+# Output curves will be generate in roc.svg and pr.svg
 # The curve name in legend will be the input file basenames, without extension
 
 
