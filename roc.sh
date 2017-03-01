@@ -53,10 +53,13 @@ do
 
 	title=$(basename  $input_file)
 	title="${title%.*}"
-	roc_plot="$roc_plot '"$tmp_file"' using (($N-\$2)/$N):(($P-\$3)/$P) title \"$title\" with lines"
-	pr_plot="$pr_plot '"$tmp_file"' using (($P-\$3)/$P):(($P-\$3)/($P-\$3+$N-\$2)) title \"$title\" with lines"
+	roc_plot="$roc_plot '"$tmp_file"' using (($N-\$2)/$N):(($P-\$3)/$P) title \"$title\" with lines,"
+	pr_plot="$pr_plot '"$tmp_file"' using (($P-\$3)/$P):(($P-\$3)/($P-\$3+$N-\$2)) title \"$title\" with lines,"
 done
 
+#remove last comma
+roc_plot=${roc_plot%?}
+pr_plot=${pr_plot%?}
 
 gnuplot <<-EOF
 	set terminal svg enhanced background rgb 'white' size 1000 1000 fsize 20
