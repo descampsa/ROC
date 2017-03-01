@@ -30,7 +30,7 @@ pr_plot=""
 for input_file in "$@"
 do
 	tmp_file="$tmp_dir/$(basename $input_file)"
-	sort -k 2 $input_file | awk '
+	LC_ALL=C sort -k 2 -g $input_file | awk '
 	BEGIN{
 		N=0
 		P=0
@@ -53,8 +53,8 @@ do
 
 	title=$(basename  $input_file)
 	title="${title%.*}"
-	roc_plot="$roc_plot '"$tmp_file"' using (($N-\$2)/$N):(($P-\$3)/$P) title \"$title\" with lines,"
-	pr_plot="$pr_plot '"$tmp_file"' using (($P-\$3)/$P):(($P-\$3)/($P-\$3+$N-\$2)) title \"$title\" with lines,"
+	roc_plot="$roc_plot '"$tmp_file"' using (($N-\$2)/$N):(($P-\$3)/$P) title \"$title\" with lines"
+	pr_plot="$pr_plot '"$tmp_file"' using (($P-\$3)/$P):(($P-\$3)/($P-\$3+$N-\$2)) title \"$title\" with lines"
 done
 
 
